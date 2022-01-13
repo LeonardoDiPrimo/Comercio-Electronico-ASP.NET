@@ -1,0 +1,55 @@
+﻿@model ComercioElectronicoMvc.Models.Usuario
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/LayoutUsuario.cshtml";
+}
+<h4>Editar Usuario</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditUser">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="usuarioId" />
+            <div class="form-group">
+                <label asp-for="nombre" class="control-label"></label>
+                <input asp-for="nombre" class="form-control" />
+                <span asp-validation-for="nombre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="apellido" class="control-label"></label>
+                <input asp-for="apellido" class="form-control" />
+                <span asp-validation-for="apellido" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="mail" class="control-label"></label>
+                <input asp-for="mail" class="form-control" />
+                <span asp-validation-for="mail" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="esEmpresa" /> @Html.DisplayNameFor(model => model.esEmpresa)
+                </label>
+            </div>
+
+            <input type="hidden" asp-for="dni" />
+            <input type="hidden" asp-for="cuilCuit" />
+            <input type="hidden" asp-for="password" />
+            <input type="hidden" asp-for="esAdministrador" />
+            <input type="hidden" asp-for="esBloqueado" />
+            <input type="hidden" asp-for="reitentosBloqueo" />
+
+            <div class="form-group">
+                <input type="submit" value="Guardar Cambios" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-action="DetailsUser"> Detalles del Usuario </a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

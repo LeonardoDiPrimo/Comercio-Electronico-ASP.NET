@@ -1,0 +1,39 @@
+﻿@model ComercioElectronicoMvc.Models.Compra
+
+@{
+    ViewData["Title"] = "Editar Compra";
+    Layout = "~/Views/Shared/LayoutAdmin.cshtml";
+}
+<h4>Editar Compra</h4>
+<hr />
+
+@if (@ViewData["ErrorMessage"] != null)
+{
+    <p style="color:red">@ViewData["ErrorMessage"]</p>
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditPurchaseTotal">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="compraId" />
+
+            <div class="form-group">
+                <label for="nuevoTotal" class="control-label">Nuevo Total de Compra</label>
+                <input name="nuevoTotal" type="number" step=0.01 class="form-control" required />
+                <span class="field-validation-error text-danger" data-valmsg-for="nuevoTotal" data-valmsg-replace="true"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Actualizar Total" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-action="Index">Volver</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

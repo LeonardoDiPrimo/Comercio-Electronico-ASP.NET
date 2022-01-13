@@ -1,0 +1,71 @@
+﻿@model IEnumerable<ComercioElectronicoMvc.Models.Compra>
+
+@{
+    String titulo = "";
+    String nombreColumna = "";
+
+    if (ViewBag.EsAdministrador)
+    {
+        ViewData["Title"] = "Compras";
+        Layout = "~/Views/Shared/LayoutAdmin.cshtml";
+        titulo = "Compras";
+        nombreColumna = "ID de Compra";
+    }
+
+    else {
+        ViewData["Title"] = "Mis Compras";
+        Layout = "~/Views/Shared/LayoutUsuario.cshtml";
+        titulo = "Mis Compras";
+        nombreColumna = "Número de Comprobante";
+    }
+}
+
+<h1>@titulo</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName(nombreColumna)
+            </th>
+            <th>
+                @Html.DisplayName("Nombre del Cliente")
+            </th>
+            <th>
+                @Html.DisplayName("Precio Total")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Compra compra in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => compra.compraId)
+                </td>
+                <td>
+                    @{
+                        String nombreCliente = compra.usuario.nombre + " " + compra.usuario.apellido;
+                    }
+
+                    @Html.DisplayName(nombreCliente)
+                </td>
+                <td>
+                   $@Html.DisplayFor(modelItem => compra.total)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@compra.compraId">Detalles</a> 
+
+                    @{
+                        if (ViewBag.EsAdministrador)
+                        {
+                            <a asp-action="EditPurchaseTotal" asp-route-id="@compra.compraId">Editar Total</a>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

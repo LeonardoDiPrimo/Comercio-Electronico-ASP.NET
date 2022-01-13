@@ -1,0 +1,104 @@
+﻿@model IEnumerable<ComercioElectronicoMvc.Models.Producto>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/LayoutUsuario.cshtml";
+}
+
+<h1>Catálogo de productos</h1>
+
+@if (@ViewData["ErrorMessage"] != null)
+{
+    <p style="color:red">@ViewData["ErrorMessage"]</p>
+}
+
+<form class="d-flex" asp-action="LoadProducts" method="get">
+    <div class="form-group mr-5">
+        <select name="categoriaId" class="form-control">
+            <option value="" selected>Filtrar Categoria</option>
+            @foreach (Categoria cat in (IEnumerable<Categoria>)ViewData["categorias"])
+            {
+                <option value="@cat.categoriaId">@Html.DisplayFor(modelItem => cat.nombre)</option>
+            }
+        </select>
+        <span class="text-danger"></span>
+    </div>
+    @using (Html.BeginForm())
+    {
+        <p>
+            Buscar Producto Por Nombre: @Html.TextBox("searchProduct")
+            <input type="submit" value="Aplicar Filtros" class="btn btn-primary" />
+        </p>
+    }
+
+</form>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.ActionLink("Nombre", "LoadProducts", new { sortOrder = ViewBag.NameSortParm })
+            </th>
+            <th>
+                @Html.ActionLink("Precio", "LoadProducts", new { sortOrder = ViewBag.PriceSortParm })
+            </th>
+            <th>
+                @Html.DisplayName("Cantidad disponible")
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.categoria)
+            </th>
+            <th>Cantidad en carro</th>
+            <th>Acciones del carro</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombre)
+                </td>
+                <td>
+                    @{
+                        double precioUnitario = 0;
+                        if (ViewBag.EsEmpresa) precioUnitario = item.precio * 0.79;
+                        else precioUnitario = item.precio;
+                    }
+
+                    $@Html.DisplayName(Convert.ToString(precioUnitario))
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.cantidad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.categoria.nombre)
+                </td>
+                 <td>
+                    @if (ViewBag.Rel_Carro_Productos != null){
+                        @foreach (Rel_Carro_Producto rcp in (List<Rel_Carro_Producto>)@ViewBag.Rel_Carro_Productos)
+                        {
+                            @if (rcp.productoId == item.productoId)
+                            {
+                                <span class="text-danger">@rcp.cantidad</span>
+                            }
+                        }
+                    }
+                </td>
+                <td>
+                    <a class="text-success"
+                       asp-controller="Carro"
+                       asp-action="AgregarAlCarro"
+                       asp-route-id="@item.productoId">Agregar</a> |
+                    <a class="text-warning"
+                       asp-controller="Carro"
+                       asp-action="RestarDelCarro"
+                       asp-route-id="@item.productoId">Restar</a> |
+                    <a class="text-danger"
+                       asp-controller="Carro"
+                       asp-action="EliminarDelCarro"
+                       asp-route-id="@item.productoId">Eliminar todos</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

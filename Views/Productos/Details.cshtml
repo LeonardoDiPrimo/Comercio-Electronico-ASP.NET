@@ -1,0 +1,46 @@
+﻿@model ComercioElectronicoMvc.Models.Producto
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/LayoutAdmin.cshtml";
+}
+<div>
+    <h4>Detalles del Producto</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.nombre)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.nombre)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.precio)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.precio)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.cantidad)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.cantidad)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.deprecado)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.deprecado)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.categoria)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.categoria.nombre)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.productoId">Editar</a> |
+    <a asp-action="Index">Volver</a>
+</div>

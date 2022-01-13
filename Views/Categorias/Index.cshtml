@@ -1,0 +1,49 @@
+﻿@model IEnumerable<ComercioElectronicoMvc.Models.Categoria>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/LayoutAdmin.cshtml";
+}
+
+<h1>Categorias</h1>
+
+<p>
+    <a asp-action="Create">Añadir Categoria</a>
+</p>
+
+@if (@ViewData["ErrorMessage"] != null)
+{
+    <p style="color:red">@ViewData["ErrorMessage"]</p>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.deprecado)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.deprecado)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.categoriaId">Editar</a> |
+                    <a asp-action="Details" asp-route-id="@item.categoriaId">Detalles</a> |
+                    <a asp-action="Delete" asp-route-id="@item.categoriaId">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

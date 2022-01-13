@@ -1,0 +1,57 @@
+﻿@model IEnumerable<ComercioElectronicoMvc.Models.Rel_Carro_Compra>
+
+@{
+    ViewData["Title"] = "Detalles";
+
+    if (ViewBag.EsAdministrador) Layout = "~/Views/Shared/LayoutAdmin.cshtml";
+    else Layout = "~/Views/Shared/LayoutUsuario.cshtml";
+    
+}
+    <h1>Detalle de Compra</h1>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayName("Nombre del Producto")
+                </th>
+                <th>
+                    @Html.DisplayName("Cantidad Comprada")
+                </th>
+                <th>
+                    @Html.DisplayName("Precio Unitario")
+                </th>
+                <th>
+                    @Html.DisplayName("Precio Total del Producto")
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Rel_Carro_Compra rcp in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => rcp.producto.nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => rcp.cantidad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => rcp.precioProducto)
+                </td>
+                <td>
+                   @{
+                        String precioTotalProducto = Convert.ToString(rcp.cantidad * rcp.precioProducto);
+                    }
+
+                    $@Html.DisplayName(precioTotalProducto)
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+
+    <div>
+        <a asp-action="Index">Volver</a>
+    </div>

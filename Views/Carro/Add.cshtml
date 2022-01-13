@@ -1,0 +1,20 @@
+﻿@model ComercioElectronicoMvc.Models.Rel_Carro_Producto
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/LayoutUsuario.cshtml";
+}
+<h4 class="text-success">Producto @Html.DisplayFor(model => model.producto.nombre) modificado correctamente</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <h2>
+            La nueva cantidad es: @Html.DisplayFor(model => model.cantidad)
+        </h2>
+    </div>
+</div>
+
+<div>
+    <a asp-action="LoadProducts">Seguir comprando</a> | 
+    <a asp-action="Index">Ir al carro</a>
+</div>

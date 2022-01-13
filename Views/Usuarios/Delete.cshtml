@@ -1,0 +1,72 @@
+﻿@model ComercioElectronicoMvc.Models.Usuario
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/LayoutAdmin.cshtml";
+}
+<div>
+    <h4>Eliminar Usuario</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.dni)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.dni)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.cuilCuit)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.cuilCuit)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.nombre)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.nombre)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.apellido)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.apellido)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.mail)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.mail)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.esAdministrador)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.esAdministrador)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.esEmpresa)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.esEmpresa)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.deprecado)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.deprecado)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.esBloqueado)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.esBloqueado)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="usuarioId" />
+        <input type="submit" value="Eliminar" class="btn btn-danger" /> |
+        <a asp-action="Index">Volver</a>
+    </form>
+</div>

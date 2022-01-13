@@ -1,0 +1,104 @@
+﻿@model ComercioElectronicoMvc.Models.Carro
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/LayoutUsuario.cshtml";
+}
+
+@{
+    if (ViewBag.CompraSatisfactoria != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>@ViewBag.CompraSatisfactoria</strong> 
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+    }
+}
+
+
+@{
+    if (ViewBag.ErrorCompra != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong>@ViewBag.ErrorCompra</strong> 
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+    }
+}
+
+
+<h1>Carro de Compras de @ViewBag.NombreUsuario @ViewBag.ApellidoUsuario</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                Producto
+            </th>
+            <th>
+                Categoria
+            </th>
+            <th>
+                Cantidad                
+            </th>
+            <th>
+                Precio unitario
+            </th>
+            <th>
+                Pecio total por este producto
+            </th>
+            
+        </tr>
+    </thead>
+    <tbody>
+         @foreach (var rcp in Model.Rel_Carro_Productos)
+            {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => rcp.producto.nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => rcp.producto.categoria.nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => rcp.cantidad)
+            </td>
+            <td>
+                @{
+                    double precioUnitario = 0;
+                    if (ViewBag.EsEmpresa) precioUnitario = rcp.producto.precio * 0.79;
+                    else precioUnitario = rcp.producto.precio;
+                }
+
+                @Html.DisplayName("$" + precioUnitario)
+            </td>
+            @{
+                double totalPrecioProducto = 0;
+                if (ViewBag.EsEmpresa) totalPrecioProducto = (rcp.producto.precio * rcp.cantidad) * 0.79;
+                else totalPrecioProducto = rcp.producto.precio * rcp.cantidad;
+            }
+            <td>
+                @Html.DisplayName("$" + totalPrecioProducto)
+            </td>
+        </tr>
+            }
+        
+        
+        
+    </tbody>
+</table>
+
+<div class="text-right mt-5">
+    <p>
+        <b>Precio total de la compra: $@ViewBag.TotalCompra</b>
+    </p>
+
+    <a class="btn btn-primary"
+                    asp-controller="Compras" 
+                    asp-action="Create">Finalizar compra</a>
+</div>
+

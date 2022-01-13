@@ -1,0 +1,88 @@
+﻿@model IEnumerable<ComercioElectronicoMvc.Models.Producto>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/LayoutAdmin.cshtml";
+}
+
+<h1>Productos</h1>
+
+<p>
+    <a asp-action="Create">Añadir Producto</a>
+</p>
+
+@if (@ViewData["ErrorMessage"] != null)
+{
+    <p style="color:red">@ViewData["ErrorMessage"]</p>
+}
+
+<form class="d-flex" asp-action="Index" method="get">
+    <div class="form-group mr-5">
+        <select name="categoriaId" class="form-control">
+            <option value="" selected>Filtrar Categoria</option>
+            @foreach (Categoria cat in (IEnumerable<Categoria>)ViewData["categorias"])
+            {
+                <option value="@cat.categoriaId">@Html.DisplayFor(modelItem => cat.nombre)</option>
+            }
+        </select>
+        <span class="text-danger"></span>
+    </div>
+    @using (Html.BeginForm())
+    {
+        <p>
+            Buscar Producto Por Nombre: @Html.TextBox("searchProduct")
+            <input type="submit" value="Aplicar Filtros" class="btn btn-primary" />
+        </p>
+    }
+
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.ActionLink("Nombre", "Index", new { sortOrder = ViewBag.NameSortParm })
+            </th>
+            <th>
+                @Html.ActionLink("Precio", "Index", new { sortOrder = ViewBag.PriceSortParm })
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.cantidad)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.deprecado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.categoria)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.precio)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.cantidad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.deprecado)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.categoria.nombre)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.productoId">Editar</a> |
+                    <a asp-action="Details" asp-route-id="@item.productoId">Detalles</a> |
+                    <a asp-action="Delete" asp-route-id="@item.productoId">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,86 @@
+﻿@model IEnumerable<ComercioElectronicoMvc.Models.Usuario>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/LayoutAdmin.cshtml";
+}
+
+<h1>Usuarios</h1>
+
+<p>
+    <a asp-action="Create">Añadir Usuario</a>
+</p>
+
+@if (@ViewData["ErrorMessage"] != null)
+{
+    <p style="color:red">@ViewData["ErrorMessage"]</p>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.dni)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.cuilCuit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.apellido)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.esAdministrador)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.esEmpresa)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.deprecado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.esBloqueado)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.dni)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.cuilCuit)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.apellido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.esAdministrador)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.esEmpresa)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.deprecado)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.esBloqueado)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.usuarioId">Editar</a> |
+                <a asp-action="Details" asp-route-id="@item.usuarioId">Detalles</a> |
+                <a asp-action="Delete" asp-route-id="@item.usuarioId">Eliminar</a> |
+                <a asp-action="UnlockUser" asp-route-id="@item.usuarioId">Desbloquear</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

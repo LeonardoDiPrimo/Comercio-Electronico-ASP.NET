@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/LayoutUsuario.cshtml";
+}
+<h4 class="text-danger">El producto no se encontró en su carro</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <h2>
+            ¿Desea agregarlo?
+        </h2>
+        <a class="text-success"
+                    asp-controller="Carro" 
+                    asp-action="AgregarAlCarro"
+                    asp-route-id="@ViewBag.productoId">Agregar al carro</a>
+    </div>
+</div>
+
+<div>
+    <a asp-action="LoadProducts">Seguir comprando</a> | 
+    <a asp-action="Index">Ir al carro</a>
+</div>
