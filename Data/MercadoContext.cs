@@ -16,7 +16,7 @@ namespace ComercioElectronicoMvc.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-3RV9BAR\SQLEXPRESS;Initial Catalog=ComercioElectronicoMvc;Integrated Security=True");
+            optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-7S0P3LV\SQLEXPRESS;Initial Catalog=ComercioElectronicoMvc;Integrated Security=True");
         }
 
         public DbSet<ComercioElectronicoMvc.Models.Categoria> Categoria { get; set; }
