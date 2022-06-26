@@ -31,7 +31,7 @@ namespace ComercioElectronicoMvc
                     options.UseSqlServer(Configuration.GetConnectionString("MercadoContext")));
 
             services.AddSession(options => {
-                options.IdleTimeout = TimeSpan.FromMinutes(0.1); //Timeout de la sesion en minutos
+                options.IdleTimeout = TimeSpan.FromHours(1); //Timeout of the session in Hours
             });
         }
 
