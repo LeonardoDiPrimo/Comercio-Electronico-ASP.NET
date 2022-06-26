@@ -28,7 +28,7 @@ namespace ComercioElectronicoMvc
             services.AddControllersWithViews();
 
             services.AddDbContext<MercadoContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("MercadoContext")));
+            options.UseNpgsql(Configuration.GetConnectionString("MercadoContext")));
 
             services.AddSession(options => {
                 options.IdleTimeout = TimeSpan.FromHours(1); //Timeout of the session in Hours

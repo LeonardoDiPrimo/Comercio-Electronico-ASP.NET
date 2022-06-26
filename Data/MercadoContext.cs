@@ -14,27 +14,21 @@ namespace ComercioElectronicoMvc.Data
         {
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-7S0P3LV\SQLEXPRESS;Initial Catalog=ComercioElectronicoMvc;Integrated Security=True");
-        }
+        public DbSet<Categoria> Categoria { get; set; }
 
-        public DbSet<ComercioElectronicoMvc.Models.Categoria> Categoria { get; set; }
+        public DbSet<Producto> Producto { get; set; }
 
-        public DbSet<ComercioElectronicoMvc.Models.Producto> Producto { get; set; }
+        public DbSet<Usuario> Usuario { get; set; }
 
-        public DbSet<ComercioElectronicoMvc.Models.Usuario> Usuario { get; set; }
+        public DbSet<Carro> Carro { get; set; }
 
-        public DbSet<ComercioElectronicoMvc.Models.Carro> Carro { get; set; }
-
-        public DbSet<ComercioElectronicoMvc.Models.Compra> Compra { get; set; }
+        public DbSet<Compra> Compra { get; set; }
 
         public const String loggedInUserIdKey = "loggedInUserId";
 
-        //public static int loggedInUserId { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.UseSerialColumns();
 
             modelBuilder.Entity<Categoria>(cat =>
             {
