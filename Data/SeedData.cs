@@ -33,7 +33,21 @@ namespace ComercioElectronicoMvc.Data
                         esEmpresa = false,
                         deprecado = false,
                         carro = new Carro()
+                    },
+                    new Usuario
+                    {
+                        dni = 40748615,
+                        cuilCuit = 20407486152L,
+                        nombre = "Agustin",
+                        apellido = "Di Primo",
+                        mail = "agusdiprimo@gmail.com",
+                        password = Utilities.GetStringSha256Hash("1234567"),
+                        esAdministrador = false,
+                        esEmpresa = false,
+                        deprecado = false,
+                        carro = new Carro()
                     }
+
                 );
                 context.SaveChanges();
             }
