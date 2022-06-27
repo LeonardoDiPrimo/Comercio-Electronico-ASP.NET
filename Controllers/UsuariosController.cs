@@ -382,14 +382,6 @@ namespace ComercioElectronicoMvc.Models
         {
             HttpContext.Session.Clear();
 
-            //Siempre se carga por defecto el Login, cuando la BD este vacía genero un usuario ADMIN de prueba
-            Usuario admin = _context.Usuario.Where(u => u.dni == 1).FirstOrDefault();
-            if (admin == null)
-            {
-                Usuario usuario = new Usuario { dni = 1, cuilCuit = 1L, nombre = "Admin", apellido = "Admin", mail = "admin@gmail.com", password = "admin", esAdministrador = true, esEmpresa = false, deprecado = false, carro = new Carro() };
-                await Create(usuario);
-            } 
-
             if (TempData["ErrorValidation"] != null) this.ViewData["ErrorMessage"] = TempData["ErrorValidation"];            
 
             return View();
