@@ -19,21 +19,29 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Carro" asp-action="LoadProducts">Catálogo de Productos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Carro" asp-action="Index">
-                                <img src="~/images/carrito.png" alt="carrito" width="20" height="20">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Carro" asp-action="LoadProducts">
+                                <img src="~/images/bag.svg" alt="catalogo"> Catálogo de Productos
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Compras" asp-action="Index">Mis compras</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Carro" asp-action="Index">
+                                <img src="~/images/cart4.svg" alt="carrito"> Carro de Compras
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="DetailsUser">Mis datos</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Compras" asp-action="Index">
+                                <img src="~/images/receipt-cutoff.svg" alt="misCompras"> Mis compras
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Login">Salir</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="DetailsUser">
+                                <img src="~/images/person-circle.svg" alt="misDatos"> Mis datos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Usuarios" asp-action="Login">
+                                <img src="~/images/box-arrow-left.svg" alt="logout"> Salir
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -47,10 +55,9 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2021 - ComercioElectronicoMvc - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+        <div class="container"> &copy; 2022 - Autor: Roberto Leonardo Di Primo</div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
