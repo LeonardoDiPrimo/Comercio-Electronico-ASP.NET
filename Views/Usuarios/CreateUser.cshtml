@@ -8,7 +8,12 @@
 
 @if (@ViewData["ErrorMessage"] != null)
 {
-    <p style="color:red">@ViewData["ErrorMessage"]</p>
+    <div class="alert alert-danger" role="alert">
+        <strong>@ViewData["ErrorMessage"]</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
 }
 
 <div class="row">
@@ -51,14 +56,14 @@
                 </label>
             </div>
             <div class="form-group">
-                <input type="submit" value="Enviar Registro" class="btn btn-primary" />
+                <input type="submit" value="Crear Usuario" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-controller="Usuarios" asp-action="Login">Volver a Login</a>
+    <a asp-controller="Usuarios" asp-action="Login">Volver al inicio de sesión</a>
 </div>
 
 @section Scripts {

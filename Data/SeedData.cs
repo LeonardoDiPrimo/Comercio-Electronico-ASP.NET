@@ -28,7 +28,7 @@ namespace ComercioElectronicoMvc.Data
                         nombre = "Roberto Leonardo",
                         apellido = "Di Primo",
                         mail = "leodiprimo@gmail.com",
-                        password = Utilities.GetStringSha256Hash("1234"),
+                        password = Utilities.GetStringSha256Hash("1234567"),
                         esAdministrador = true,
                         esEmpresa = false,
                         deprecado = false,

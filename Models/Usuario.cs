@@ -11,30 +11,34 @@ namespace ComercioElectronicoMvc.Models
     {
         public int usuarioId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El campo DNI es obligatorio.")]
         [DisplayName("DNI")]
-        [Range(1, 99999999, ErrorMessage = "El DNI debe ser mayor a 0")]
+        [Range(1000000, 99999999, ErrorMessage = "El DNI debe ingresado debe contener entre 7 y 8 digitos.")]
         public int dni { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El campo CUIL/CUIT es obligatorio.")]
         [DisplayName("CUIL/CUIT")]
-        [Range(1, 99999999999, ErrorMessage = "El CUIL o CUIT debe ser mayor a 0")]
+        [Range(10000000000, 99999999999, ErrorMessage = "El CUIL o CUIT ingresado debe contener 11 digitos exactos.")]
         public Int64 cuilCuit  { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El campo Nombre es obligatorio.")]
         [DisplayName("Nombre")]
         public String nombre { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El campo Apellido es obligatorio.")]
         [DisplayName("Apellido")]
         public String apellido { get; set; }
 
-        [Required]
-        [DisplayName("Mail")]
+        [Required(ErrorMessage = "El campo Email es obligatorio.")]
+        [DisplayName("Email")]
+        [RegularExpression(@"\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*",
+            ErrorMessage = "Dirección de Correo electrónico incorrecta.")]
+        [StringLength(100, ErrorMessage = "Longitud máxima 100")]
         public String mail { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El campo Contraseña es obligatorio.")]
         [DisplayName("Contraseña")]
+        [StringLength(20, ErrorMessage = "La longitud del campo {0} debe estar entre {2} y {1} digitos.", MinimumLength = 7)]
         public String password { get; set; }
 
         [Required]
