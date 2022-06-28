@@ -69,27 +69,29 @@ namespace ComercioElectronicoMvc.Controllers
                 TempData["SessionExpired"] = "La sesión expiró, ingresa nuevamente.";
                 return RedirectToAction("Login", "Usuarios");
             }
-
-            int userId = (int)HttpContext.Session.GetInt32(MercadoContext.loggedInUserIdKey);
+            int userId = (int) HttpContext.Session.GetInt32(MercadoContext.loggedInUserIdKey);
 
             //Validaciones de error que se le pasan a la vista
             if (TempData["ErrorValidation"] != null) this.ViewData["ErrorMessage"] = TempData["ErrorValidation"];
 
+            var mercadoContext = _context.Producto.Include(p => p.categoria).Where(p => !p.deprecado && !p.categoria.deprecado && p.cantidad > 0);
             Usuario usuario = _context.Usuario.Where(u => u.usuarioId == userId).FirstOrDefault();
-
-            ViewBag.NameSortParm  = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewBag.PriceSortParm = sortOrder == "Precio" ? "price_desc" : "Precio";
             ViewBag.EsEmpresa = usuario.esEmpresa;
 
-            var mercadoContext = _context.Producto.Include(p => p.categoria).Where(p => !p.deprecado && !p.categoria.deprecado && p.cantidad > 0);
-            
+            //Cargo el Filtro de categorias que no estan deprecadas
+            ViewData["categorias"] = _context.Categoria.Where(c => !c.deprecado).ToList();
+
             //Filtro Categoria
             if (categoriaId != null) mercadoContext = mercadoContext.Where(p => p.categoriaId == categoriaId);
 
             //Filtro Buscar Producto por Nombre
+            ViewData["SearchProduct"] = searchProduct;
             if (!String.IsNullOrEmpty(searchProduct)) mercadoContext = mercadoContext.Where(p => p.nombre.ToUpper().Contains(searchProduct.ToUpper()));
-            
+
             //Ordeno ascendente y descendente el nombre de los productos y el precio
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["PriceSort"] = sortOrder == "Precio" ? "price_desc" : "Precio";
+
             switch (sortOrder)
             {
                 case "name_desc":
@@ -105,9 +107,6 @@ namespace ComercioElectronicoMvc.Controllers
                     mercadoContext = mercadoContext.OrderBy(p => p.nombre);
                     break;
             }
-
-            //Cargo el Filtro de categorias que no estan deprecadas
-            ViewData["categorias"] = _context.Categoria.Where(c => !c.deprecado).ToList();
 
             //Cargo los productos en el carro
             _context.Carro.Include(c => c.Productos).Load();

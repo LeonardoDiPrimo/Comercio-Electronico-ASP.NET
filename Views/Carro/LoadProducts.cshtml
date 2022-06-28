@@ -9,46 +9,51 @@
 
 @if (@ViewData["ErrorMessage"] != null)
 {
-    <p style="color:red">@ViewData["ErrorMessage"]</p>
+    <div class="alert alert-danger" role="alert">
+        <strong>@ViewData["ErrorMessage"]</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
 }
 
-<form class="d-flex" asp-action="LoadProducts" method="get">
-    <div class="form-group mr-5">
-        <select name="categoriaId" class="form-control">
+<form asp-action="LoadProducts" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Buscar Producto por Nombre: <input type="text" name="searchProduct" value="@ViewData["SearchProduct"]" />
+        </p>
+        <select name="categoriaId">
             <option value="" selected>Filtrar Categoria</option>
             @foreach (Categoria cat in (IEnumerable<Categoria>)ViewData["categorias"])
             {
                 <option value="@cat.categoriaId">@Html.DisplayFor(modelItem => cat.nombre)</option>
             }
         </select>
-        <span class="text-danger"></span>
+        <input type="submit" value="Aplicar Filtros" class="btn btn-default"/>
     </div>
-    @using (Html.BeginForm())
-    {
-        <p>
-            Buscar Producto Por Nombre: @Html.TextBox("searchProduct")
-            <input type="submit" value="Aplicar Filtros" class="btn btn-primary" />
-        </p>
-    }
-
 </form>
+
 <table class="table table-striped">
     <thead>
         <tr>
             <th>
-                @Html.ActionLink("Nombre", "LoadProducts", new { sortOrder = ViewBag.NameSortParm })
+                <a asp-action="LoadProducts" asp-route-sortOrder="@ViewData["NameSortParm"]">@Html.DisplayNameFor(model => model.nombre)</a>
             </th>
             <th>
-                @Html.ActionLink("Precio", "LoadProducts", new { sortOrder = ViewBag.PriceSortParm })
+                <a asp-action="LoadProducts" asp-route-sortOrder="@ViewData["PriceSort"]">@Html.DisplayNameFor(model => model.precio)</a>
             </th>
             <th>
-                @Html.DisplayName("Cantidad disponible")
+                @Html.DisplayName("Stock")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.categoria)
+                @Html.DisplayName("Categoria")
             </th>
-            <th>Cantidad en carro</th>
-            <th>Acciones del carro</th>
+            <th>
+                @Html.DisplayName("Cantidad")
+            </th>
+            <th>
+                @Html.DisplayName("Acciones del carro")
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -73,8 +78,9 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.categoria.nombre)
                 </td>
-                 <td>
-                    @if (ViewBag.Rel_Carro_Productos != null){
+                <td>
+                    @if (ViewBag.Rel_Carro_Productos != null)
+                    {
                         @foreach (Rel_Carro_Producto rcp in (List<Rel_Carro_Producto>)@ViewBag.Rel_Carro_Productos)
                         {
                             @if (rcp.productoId == item.productoId)
@@ -86,17 +92,17 @@
                 </td>
                 <td>
                     <a class="text-success"
-                       asp-controller="Carro"
-                       asp-action="AgregarAlCarro"
-                       asp-route-id="@item.productoId">Agregar</a> |
+                   asp-controller="Carro"
+                   asp-action="AgregarAlCarro"
+                   asp-route-id="@item.productoId">Agregar</a> |
                     <a class="text-warning"
-                       asp-controller="Carro"
-                       asp-action="RestarDelCarro"
-                       asp-route-id="@item.productoId">Restar</a> |
+                   asp-controller="Carro"
+                   asp-action="RestarDelCarro"
+                   asp-route-id="@item.productoId">Restar</a> |
                     <a class="text-danger"
-                       asp-controller="Carro"
-                       asp-action="EliminarDelCarro"
-                       asp-route-id="@item.productoId">Eliminar todos</a>
+                   asp-controller="Carro"
+                   asp-action="EliminarDelCarro"
+                   asp-route-id="@item.productoId">Eliminar todos</a>
                 </td>
             </tr>
         }
