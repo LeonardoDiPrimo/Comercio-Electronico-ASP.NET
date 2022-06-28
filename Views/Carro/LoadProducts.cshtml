@@ -17,21 +17,32 @@
     </div>
 }
 
-<form asp-action="LoadProducts" method="get">
-    <div class="form-actions no-color">
-        <p>
-            Buscar Producto por Nombre: <input type="text" name="searchProduct" value="@ViewData["SearchProduct"]" />
-        </p>
-        <select name="categoriaId">
-            <option value="" selected>Filtrar Categoria</option>
-            @foreach (Categoria cat in (IEnumerable<Categoria>)ViewData["categorias"])
-            {
-                <option value="@cat.categoriaId">@Html.DisplayFor(modelItem => cat.nombre)</option>
-            }
-        </select>
-        <input type="submit" value="Aplicar Filtros" class="btn btn-default"/>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="LoadProducts" method="get">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">Filtrar Producto por Nombre</label>
+                <input input type="text" name="searchProduct" value="@ViewData["SearchProduct"]" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Filtrar Producto por Categoría</label>
+                <select name="categoriaId" class="form-control">
+                    <option value="" selected>Todas</option>
+                    @foreach (Categoria cat in (IEnumerable<Categoria>)ViewData["categorias"])
+                    {
+                        <option value="@cat.categoriaId">@Html.DisplayFor(modelItem => cat.nombre)</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Aplicar Filtros" class="btn btn-primary" />
+            </div>
+        </form>
     </div>
-</form>
+</div>
+
+
 
 <table class="table table-striped">
     <thead>
