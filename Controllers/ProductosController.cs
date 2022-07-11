@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +17,6 @@ namespace ComercioElectronicoMvc.Models
             _context = context;
         }
 
-        // GET: Productos
         public async Task<IActionResult> Index(int? categoriaId, string sortOrder, string searchProduct)
         {
             //Validaciones de error que se le pasan a la vista
@@ -58,151 +56,137 @@ namespace ComercioElectronicoMvc.Models
             return View(await mercadoContext.ToListAsync());
         }
 
-        // GET: Productos/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
-            if (id == null)
+            Producto product = FindProductById(id);
+            if (product == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "Producto no encontrado.";
+                return RedirectToAction(nameof(Index));
             }
-
-            var producto = await _context.Producto
-                .Include(p => p.categoria)
-                .FirstOrDefaultAsync(m => m.productoId == id);
-            if (producto == null)
-            {
-                return NotFound();
-            }
-
-            return View(producto);
+            return View(product);
         }
 
-        // GET: Productos/Create
         public IActionResult Create()
         {
-            //Filtro las categorias que no estan eliminadas
-            ViewData["categoriaId"] = new SelectList(_context.Categoria.Where(c => !c.deprecado), "categoriaId", "nombre");
+            ViewBag.Categories = LoadCategoryFilter(null);
             return View();
         }
 
-        // POST: Productos/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("productoId,nombre,precio,cantidad,deprecado,categoriaId")] Producto producto)
+        public async Task<IActionResult> Create([Bind("productoId,nombre,precio,cantidad,deprecado,categoriaId")] Producto product)
         {
+            Producto optionalProduct = FindProductyByName(product.nombre);
+
+            if (optionalProduct != null)
+            {
+                ViewBag.ErrorMessage = "El nombre del producto ya existe.";
+                ViewBag.Categories = LoadCategoryFilter(product.categoriaId);
+                return View(product);
+            }
+
             if (ModelState.IsValid)
             {
-                _context.Add(producto);
+                _context.Producto.Add(product);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = String.Format("El producto {0} se agregó correctamente.", product.nombre);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["categoriaId"] = new SelectList(_context.Categoria, "categoriaId", "nombre", producto.categoriaId);
-            return View(producto);
+
+            ViewBag.Categories = LoadCategoryFilter(product.categoriaId);
+            return View(product);
         }
 
-        // GET: Productos/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
-            if (id == null)
+            Producto product = FindProductById(id);
+            if (product == null)
             {
-                return NotFound();
-            }
-
-            var producto = await _context.Producto.FindAsync(id);
-            if (producto == null)
-            {
-                return NotFound();
-            }
-
-            if (producto.deprecado)
-            {
-                TempData["ErrorValidation"] = "Error: No se puede modificar un producto eliminado";
+                TempData["ErrorMessage"] = "Producto no encontrado.";
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["categoriaId"] = new SelectList(_context.Categoria.Where(c => !c.deprecado), "categoriaId", "nombre", producto.categoriaId);
-            return View(producto);
+            ViewBag.Categories = LoadCategoryFilter(product.categoriaId);
+            return View(product);
         }
 
-        // POST: Productos/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("productoId,nombre,precio,cantidad,deprecado,categoriaId")] Producto producto)
+        public async Task<IActionResult> Edit(int id, [Bind("productoId,nombre,precio,cantidad,deprecado,categoriaId")] Producto product)
         {
-            if (id != producto.productoId)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(producto);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductoExists(producto.productoId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _context.Producto.Update(product);
+                await _context.SaveChangesAsync();
+                ViewBag.SuccessMessage = "Producto actualizado correctamente.";
+                ViewBag.Categories = LoadCategoryFilter(product.categoriaId);
+                return View(product);
             }
-            ViewData["categoriaId"] = new SelectList(_context.Categoria, "categoriaId", "nombre", producto.categoriaId);
-            return View(producto);
+
+            ViewBag.Categories = LoadCategoryFilter(product.categoriaId);
+            return View(product);
         }
 
-        // GET: Productos/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
-            if (id == null)
+            Producto product = FindProductById(id);
+            if (product == null)
             {
-                return NotFound();
-            }
-
-            var producto = await _context.Producto
-                .Include(p => p.categoria)
-                .FirstOrDefaultAsync(m => m.productoId == id);
-            if (producto == null)
-            {
-                return NotFound();
-            }
-
-            if (producto.deprecado)
-            {
-                TempData["ErrorValidation"] = "Error: El producto ya se encuentra eliminado";
+                TempData["ErrorMessage"] = "Producto no encontrado.";
                 return RedirectToAction(nameof(Index));
             }
-
-            return View(producto);
+            return View(product);
         }
 
-        // POST: Productos/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var producto = await _context.Producto.FindAsync(id);
-            producto.deprecado = true;
-            _context.Producto.Update(producto);
+            Producto product = await _context.Producto.FindAsync(id);
+            product.deprecado = true;
+            _context.Producto.Update(product);
             await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = String.Format("El producto {0} se elimino correctamente.", product.nombre);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProductoExists(int id)
+        public async Task<IActionResult> Enable(int? id)
         {
-            return _context.Producto.Any(e => e.productoId == id);
+            Producto product = FindProductById(id);
+            if (product == null)
+            {
+                TempData["ErrorMessage"] = "Producto no encontrado.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            product.deprecado = false;
+            _context.Producto.Update(product);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = String.Format("El producto {0} se habilitó correctamente.", product.nombre);
+            return RedirectToAction(nameof(Index));
         }
 
+        private Producto FindProductyByName(string productName)
+        {
+            return _context.Producto.Where(product => product.nombre.ToUpper().Equals(productName.ToUpper())).FirstOrDefault();
+        }
+
+        private Producto FindProductById(int? productId)
+        {
+            if (productId == null) return null;
+            Producto product = _context.Producto.Include(product => product.categoria).Where(product => product.productoId == productId).FirstOrDefault();
+            if (product == null) return null;
+            else return product;
+        }
+
+        private SelectList LoadCategoryFilter(int? categoryId) {
+            //Filtro todas las categorias no eliminadas
+            if (categoryId == null) return new SelectList(_context.Categoria.Where(c => !c.deprecado), "categoriaId", "nombre");
+            //Ademas selecciono la actual
+            return new SelectList(_context.Categoria.Where(c => !c.deprecado), "categoriaId", "nombre", categoryId);
+        }
     }
 }

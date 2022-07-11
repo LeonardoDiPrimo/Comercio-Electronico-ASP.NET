@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/LayoutAdmin.cshtml";
 }
 <div>
-    <h4>Detalles del Producto</h4>
+    <h4>Detalle del Producto</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -41,6 +41,10 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.productoId">Editar</a> |
-    <a asp-action="Index">Volver</a>
+    @if (!Model.deprecado)
+    {
+         <a class="text-primary" asp-action="Edit" asp-route-id="@Model.productoId">Editar</a>
+         <label>|</label>
+    }
+    <a class="text-secondary" asp-action="Index">Volver</a>
 </div>

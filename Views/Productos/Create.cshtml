@@ -6,6 +6,17 @@
 }
 <h4>Nuevo Producto</h4>
 <hr />
+
+@if (@ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <strong>@ViewBag.ErrorMessage</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
@@ -27,7 +38,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="categoriaId" class="control-label"></label>
-                <select asp-for="categoriaId" class="form-control" asp-items="ViewBag.categoriaId"></select>
+                <select asp-for="categoriaId" class="form-control" asp-items="ViewBag.Categories"></select>
                 <span asp-validation-for="categoriaId" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -38,9 +49,11 @@
 </div>
 
 <div>
-     <a class="text-secondary" asp-action="Index">Volver</a>
+    <a class="text-secondary" asp-action="Index">Volver</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

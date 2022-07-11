@@ -63,11 +63,10 @@
                     }
                     else
                     {   
-                        <a class="text-primary" asp-action="Edit"  type="hidden" asp-route-id="@item.categoriaId">Editar</a> 
+                        <a class="text-primary" asp-action="Edit" asp-route-id="@item.categoriaId">Editar</a> 
                         <label>|</label>
                         <a class="text-danger" asp-action="Delete" asp-route-id="@item.categoriaId">Eliminar</a>
                     }
-
                 </td>
             </tr>
         }

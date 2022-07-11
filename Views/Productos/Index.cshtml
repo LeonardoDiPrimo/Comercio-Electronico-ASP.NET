@@ -11,9 +11,24 @@
     <a asp-action="Create">Añadir Producto</a>
 </p>
 
-@if (@ViewData["ErrorMessage"] != null)
+@if (@TempData["ErrorMessage"] != null)
 {
-    <p style="color:red">@ViewData["ErrorMessage"]</p>
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <strong>@TempData["ErrorMessage"]</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+@if (@TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <strong>@TempData["SuccessMessage"]</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
 }
 
 <form class="d-flex" asp-action="Index" method="get">
@@ -77,10 +92,20 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.categoria.nombre)
                 </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.productoId">Editar</a> |
-                    <a asp-action="Details" asp-route-id="@item.productoId">Detalles</a> |
-                    <a asp-action="Delete" asp-route-id="@item.productoId">Eliminar</a>
+                 <td>
+                    <a class="text-info" asp-action="Details" asp-route-id="@item.productoId">Detalle</a>
+                    <label>|</label>
+
+                    @if (item.deprecado)
+                    {
+                        <a class="text-success" asp-action="Enable" asp-route-id="@item.productoId">Habilitar</a>
+                    }
+                    else
+                    {   
+                        <a class="text-primary" asp-action="Edit" asp-route-id="@item.productoId">Editar</a> 
+                        <label>|</label>
+                        <a class="text-danger" asp-action="Delete" asp-route-id="@item.productoId">Eliminar</a>
+                    }
                 </td>
             </tr>
         }

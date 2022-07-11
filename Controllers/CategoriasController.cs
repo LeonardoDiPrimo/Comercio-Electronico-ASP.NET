@@ -77,7 +77,7 @@ namespace ComercioElectronicoMvc.Models
             {
                 _context.Categoria.Update(category);
                 await _context.SaveChangesAsync();
-                ViewBag.SuccessMessage = String.Format("Categoría actualizada correctamente.", category.nombre);
+                ViewBag.SuccessMessage = "Categoría actualizada correctamente.";
                 return View(category);
             }
             return View(category);
@@ -91,6 +91,7 @@ namespace ComercioElectronicoMvc.Models
                 TempData["ErrorMessage"] = "Categoría no encontrada.";
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.WarningMessage = "Todos los productos asociados a la categoria se eliminaran.";
             return View(category);
         }
 
@@ -98,7 +99,7 @@ namespace ComercioElectronicoMvc.Models
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            var category = await _context.Categoria.Include(category => category.productos)
+            Categoria category = await _context.Categoria.Include(category => category.productos)
                .FirstOrDefaultAsync(category => category.categoriaId == id);
 
             //Elimino los productos asosiados a esa categoria
