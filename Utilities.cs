@@ -16,9 +16,9 @@ namespace ComercioElectronicoMvc
             if (String.IsNullOrEmpty(input))
                 return String.Empty;
 
-            using (var sha = new System.Security.Cryptography.SHA256Managed())
+            using (var sha = new SHA256Managed())
             {
-                byte[] textData = System.Text.Encoding.UTF8.GetBytes(input);
+                byte[] textData = Encoding.UTF8.GetBytes(input);
                 byte[] hash = sha.ComputeHash(textData);
                 return BitConverter.ToString(hash).Replace("-", String.Empty);
             }

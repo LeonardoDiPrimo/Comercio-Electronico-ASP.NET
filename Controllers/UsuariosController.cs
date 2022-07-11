@@ -50,11 +50,11 @@ namespace ComercioElectronicoMvc.Models
             //chequeo si hay una sesion 
             if (HttpContext.Session.GetInt32(MercadoContext.loggedInUserIdKey) == null)
             {
-                this.ViewData["ErrorMessage"] = "La sesión expiró, ingresa nuevamente.";
+                TempData["ErrorMessage"] = "La sesión expiró, ingresa nuevamente.";
                 return View("Login");
             }
 
-            int id = (int)HttpContext.Session.GetInt32(MercadoContext.loggedInUserIdKey);
+            int id = (int) HttpContext.Session.GetInt32(MercadoContext.loggedInUserIdKey);
 
             if (id == 0) return NotFound();
 
@@ -82,10 +82,10 @@ namespace ComercioElectronicoMvc.Models
             if (ModelState.IsValid)
             {
                 //Valido que no exista un usuario con el mismo DNI o Cuit/Cuil
-                Usuario repeatUser = RepeatUser(usuario.dni, usuario.cuilCuit);
-                if (repeatUser != null)
+                Usuario user = FindUserByEmail(usuario.mail);
+                if (user != null)
                 {
-                    this.ViewData["ErrorMessage"] = "Error: DNI o CUIL/CUIT duplicado";
+                    this.ViewData["ErrorMessage"] = "Ya existe una cuenta con el correo electrónico ingresado.";
                     return View(usuario);
                 }
 
@@ -106,7 +106,7 @@ namespace ComercioElectronicoMvc.Models
             return View(usuario);
         }
 
-        // Este form tiene oculto el booleano administrador y hace rollback al login en el caso que sea exitoso la creacion de usuario desde el login
+        // Este form tiene oculto algunas funcionalidades que solo se pueden modificar desde el ADMIN.
         public IActionResult CreateUser()
         {
             return View();
@@ -122,7 +122,7 @@ namespace ComercioElectronicoMvc.Models
                 Usuario repeatEmail = FindUserByEmail(usuario.mail);
                 if (repeatEmail != null)
                 {
-                    this.ViewData["ErrorMessage"] = "Ya existe una cuenta con el correo electrónico ingresado.";
+                    ViewBag.ErrorMessage = "Ya existe una cuenta con el correo electrónico ingresado.";
                     return View(usuario);
                 }
 
@@ -214,6 +214,7 @@ namespace ComercioElectronicoMvc.Models
             {
                 return NotFound();
             }
+
             return View(usuario);
         }
 
@@ -225,6 +226,10 @@ namespace ComercioElectronicoMvc.Models
             {
                 return NotFound();
             }
+
+            //Error ya que la contraseña ya viene con el Hash, y supera los caracteres definido para el campo (ModelState).
+            //Como este dato no se puede modicar desde el formulario se puede desactivar la validación.
+            ModelState.Remove("password");
 
             if (ModelState.IsValid)
             {
@@ -244,6 +249,7 @@ namespace ComercioElectronicoMvc.Models
                         throw;
                     }
                 }
+                TempData["SuccessMessage"] = "Datos actualizados correctamente.";
                 return RedirectToAction(nameof(DetailsUser));
             }
             return View(usuario);
@@ -272,8 +278,10 @@ namespace ComercioElectronicoMvc.Models
         {
             var usuario = await _context.Usuario.FindAsync(id);
             if (id != usuario.usuarioId) return NotFound();
+
             //Validaciones del formulario
             contraseñaActual = Utilities.GetStringSha256Hash(contraseñaActual);
+
             if (!usuario.password.Equals(contraseñaActual))
             {
                 ViewData["ErrorMessage"] = "Error: La contraseña actual es incorrecta.";
@@ -311,6 +319,7 @@ namespace ComercioElectronicoMvc.Models
                         throw;
                     }
                 }
+
                 TempData["SuccessMessage"] = "Contraseña actualizada correctamente.";
                 return RedirectToAction(nameof(DetailsUser));
             }
@@ -381,13 +390,10 @@ namespace ComercioElectronicoMvc.Models
             }
         }
 
+        //Pantalla de Inicio
         public async Task<IActionResult> Login()
         {
             HttpContext.Session.Clear();
-
-            if (TempData["ErrorValidation"] != null) this.ViewData["ErrorMessage"]   = TempData["ErrorValidation"];
-            if (TempData["AccountCreated"] != null)  this.ViewData["AccountCreated"] = TempData["AccountCreated"];
-
             return View();
         }
 
@@ -401,13 +407,13 @@ namespace ComercioElectronicoMvc.Models
 
                 if (usuario == null || usuario.deprecado)
                 {
-                    TempData["ErrorValidation"] = "El correo ingresado no existe.";
-                    return RedirectToAction(nameof(Login));
+                   TempData["ErrorMessage"] = "El correo ingresado no existe.";
+                   return RedirectToAction(nameof(Login));
                 }
 
                 if (usuario.esBloqueado)
                 {
-                    TempData["ErrorValidation"] = "La cuenta está bloqueada, contacte a soporte.";
+                    TempData["ErrorMessage"] = "La cuenta está bloqueada, contacte a soporte.";
                     return RedirectToAction(nameof(Login));
                 }
 
@@ -422,7 +428,7 @@ namespace ComercioElectronicoMvc.Models
                         usuario.esBloqueado = true;
                         _context.Usuario.Update(usuario);
                         await _context.SaveChangesAsync();
-                        TempData["ErrorValidation"] = "La cuenta está bloqueada, contacte a soporte.";
+                        TempData["ErrorMessage"] = "La cuenta está bloqueada, contacte a soporte.";
                         return RedirectToAction(nameof(Login));
                     }
                     else
@@ -430,7 +436,7 @@ namespace ComercioElectronicoMvc.Models
                         _context.Usuario.Update(usuario);
                         await _context.SaveChangesAsync();
                         int pendingRetries = 3 - usuario.reitentosBloqueo;
-                        TempData["ErrorValidation"] = string.Format("Contraseña incorrecta. Quedan {0} reintentos antes que se bloquee la cuenta.", pendingRetries);
+                        TempData["ErrorMessage"] = string.Format("Contraseña incorrecta. Quedan {0} reintentos antes que se bloquee la cuenta.", pendingRetries);
                         return RedirectToAction(nameof(Login));
                     }
                 }
@@ -460,11 +466,6 @@ namespace ComercioElectronicoMvc.Models
         private Usuario FindUserByEmail(string email)
         {
             return _context.Usuario.Where(user => user.mail == email).FirstOrDefault();
-        }
-
-        private Usuario RepeatUser(int dni, Int64 cuilCuit)
-        {
-            return _context.Usuario.Where(u => u.dni == dni || u.cuilCuit == cuilCuit).FirstOrDefault();
         }
     }
 }

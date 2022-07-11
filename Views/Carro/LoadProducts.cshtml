@@ -7,10 +7,10 @@
 
 <h1>Catálogo de productos</h1>
 
-@if (@ViewData["ErrorMessage"] != null)
+@if (@TempData["ErrorMessage"] != null)
 {
     <div class="alert alert-danger" role="alert">
-        <strong>@ViewData["ErrorMessage"]</strong>
+        <strong>@TempData["ErrorMessage"]</strong>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -103,17 +103,17 @@
                 </td>
                 <td>
                     <a class="text-success"
-                   asp-controller="Carro"
-                   asp-action="AgregarAlCarro"
-                   asp-route-id="@item.productoId">Agregar</a> |
+                       asp-controller="Carro"
+                       asp-action="AgregarAlCarro"
+                       asp-route-id="@item.productoId">Agregar</a> |
                     <a class="text-warning"
-                   asp-controller="Carro"
-                   asp-action="RestarDelCarro"
-                   asp-route-id="@item.productoId">Restar</a> |
+                       asp-controller="Carro"
+                       asp-action="RestarDelCarro"
+                       asp-route-id="@item.productoId">Restar</a> |
                     <a class="text-danger"
-                   asp-controller="Carro"
-                   asp-action="EliminarDelCarro"
-                   asp-route-id="@item.productoId">Eliminar todos</a>
+                       asp-controller="Carro"
+                       asp-action="EliminarDelCarro"
+                       asp-route-id="@item.productoId">Eliminar todos</a>
                 </td>
             </tr>
         }

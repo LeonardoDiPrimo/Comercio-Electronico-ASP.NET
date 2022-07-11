@@ -5,17 +5,19 @@
     Layout = "~/Views/Shared/LayoutUsuario.cshtml";
 }
 <div>
-
-    @{
-        if (TempData["SuccessMessage"] != null)
-        {
-        <div class="alert alert-success" role="alert">
-            <strong>@TempData["SuccessMessage"]</strong>
-        </div>
-        }
-    }
     <h4>Detalles del Usuario</h4>
     <hr />
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <strong>@TempData["SuccessMessage"]</strong>
+        </div>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    }
+
     <dl class="row">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.dni)

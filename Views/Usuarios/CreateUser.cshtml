@@ -3,13 +3,14 @@
 @{
     ViewData["Title"] = "Create";
 }
+
 <h4>Registrarse</h4>
 <hr />
 
-@if (@ViewData["ErrorMessage"] != null)
+@if (@ViewBag.ErrorMessage != null)
 {
     <div class="alert alert-danger" role="alert">
-        <strong>@ViewData["ErrorMessage"]</strong>
+        <strong>@ViewBag.ErrorMessage</strong>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>

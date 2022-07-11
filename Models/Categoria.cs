@@ -11,11 +11,12 @@ namespace ComercioElectronicoMvc.Models
 
         public int categoriaId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         [DisplayName("Nombre")]
         public string nombre { get; set; }
 
         [DisplayName("Eliminado")]
+        [Required]
         public bool deprecado { get; set; }
 
         public List<Producto> productos { get; } = new List<Producto>();

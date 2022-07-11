@@ -127,30 +127,29 @@ namespace ComercioElectronicoMvc.Controllers
                 return RedirectToAction("Login", "Usuarios");
             }
 
-            int userId = (int)HttpContext.Session.GetInt32(MercadoContext.loggedInUserIdKey);
+            int userId = (int) HttpContext.Session.GetInt32(MercadoContext.loggedInUserIdKey);
 
-            _context.Carro.Include(c => c.Productos).Load();
-            _context.Carro.Include(c => c.Rel_Carro_Productos).Load();
+            _context.Carro.Include(c => c.Productos).Include(c => c.Rel_Carro_Productos).Load();
             var carro = await _context.Carro.Where(c => c.carroId == userId).ToArrayAsync();
-            // busco el producto a agregar al carro
+            
+            // Busco el producto para agregar al carro.
             foreach (var rcp in carro.First().Rel_Carro_Productos)
             {
-                // me fijo si ya está en el carro o no
+                // Si el producto existe.
                 if (rcp.productoId == id)
                 {
-                    //Valido stock para agregar al carro (se valida solo acá porque si es un nuevo producto deberia tener minimo 1 de stock en el catalogo)
+                    //Valido stock para agregar al carro.
                     if (rcp.cantidad < rcp.producto.cantidad)
                     {
 
-                        //si está lo modifico y retorno la vista edit con la nueva cantidad
+                        //Actualizo stock.
                         rcp.cantidad++;
                         await _context.SaveChangesAsync();
                         return RedirectToAction(nameof(LoadProducts));
-                        //return View("Add", rcp);
                     }
                     else {
                         // Stock insuficiente
-                        TempData["ErrorValidation"] = "Error: Stock insuficiente para agregar al carro.";
+                        TempData["ErrorMessage"] = "Error: Stock insuficiente para agregar al carro.";
                         return RedirectToAction(nameof(LoadProducts));
                     }
                 }
@@ -174,19 +173,18 @@ namespace ComercioElectronicoMvc.Controllers
                 return RedirectToAction("Login", "Usuarios");
             }
 
-            int userId = (int)HttpContext.Session.GetInt32(MercadoContext.loggedInUserIdKey);
+            int userId = (int) HttpContext.Session.GetInt32(MercadoContext.loggedInUserIdKey);
 
-            _context.Carro.Include(c => c.Productos).Load();
-            _context.Carro.Include(c => c.Rel_Carro_Productos).Load();
+            _context.Carro.Include(c => c.Productos).Include(c => c.Rel_Carro_Productos).Load();
             var carro = await _context.Carro.Where(c => c.carroId == userId).ToArrayAsync();
 
-            //Verifico si el producto está en el carro o no
+            //Recorro los productos.
             foreach (var rcp in carro.First().Rel_Carro_Productos)
             {
-                // me fijo si ya está en el carro o no
+                //Verifico si el producto del carro es al que le tengo que descontar stock.
                 if (rcp.productoId == id)
                 {
-                    //si está lo modifico y retorno la vista edit con la nueva cantidad
+                    //Si esta agregado y tiene stock.
                     if (rcp.cantidad > 0)
                     {
                         if (rcp.cantidad == 1)
@@ -194,14 +192,12 @@ namespace ComercioElectronicoMvc.Controllers
                             _context.Remove(rcp);
                             await _context.SaveChangesAsync();
                             return RedirectToAction(nameof(LoadProducts));
-                            //return View("Removed");
                         }
                         else
                         {
                             rcp.cantidad--;
                             await _context.SaveChangesAsync();
                             return RedirectToAction(nameof(LoadProducts));
-                            //return View("Remove", rcp);
                         }
                     }
                 }
@@ -222,10 +218,9 @@ namespace ComercioElectronicoMvc.Controllers
                 return RedirectToAction("Login", "Usuarios");
             }
 
-            int userId = (int)HttpContext.Session.GetInt32(MercadoContext.loggedInUserIdKey);
+            int userId = (int) HttpContext.Session.GetInt32(MercadoContext.loggedInUserIdKey);
 
-            _context.Carro.Include(c => c.Productos).Load();
-            _context.Carro.Include(c => c.Rel_Carro_Productos).Load();
+            _context.Carro.Include(c => c.Productos).Include(c => c.Rel_Carro_Productos).Load();
             var carro = await _context.Carro.Where(c => c.carroId == userId).ToArrayAsync();
 
             //Verifico si el producto está en el carro o no
