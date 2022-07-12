@@ -31,35 +31,47 @@
     </div>
 }
 
-<form class="d-flex" asp-action="Index" method="get">
-    <div class="form-group mr-5">
-        <select name="categoriaId" class="form-control">
-            <option value="" selected>Filtrar Categoria</option>
-            @foreach (Categoria cat in (IEnumerable<Categoria>)ViewData["categorias"])
-            {
-                <option value="@cat.categoriaId">@Html.DisplayFor(modelItem => cat.nombre)</option>
-            }
-        </select>
-        <span class="text-danger"></span>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Index" method="get">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">Filtrar Producto por Nombre</label>
+                <input input type="text" name="searchProductByName" value=@ViewBag.SearchProductByName class="form-control" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Filtrar Producto por Categoría</label>
+                <select name="categoriaId" class="form-control">
+                    @if (ViewBag.SelectedCategory != null)
+                    {
+                        <option value="">Todas</option>
+                        <option value="@ViewBag.SelectedCategory.categoriaId" selected>@ViewBag.SelectedCategory.nombre</option>
+                    } 
+                    else
+                    {
+                        <option value="" selected>Todas</option>
+                    }
+                    @foreach (Categoria category in (IEnumerable<Categoria>) ViewBag.Categories)
+                    {
+                        <option value="@category.categoriaId">@Html.DisplayFor(modelItem => category.nombre)</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Aplicar Filtros" class="btn btn-primary" />
+            </div>
+        </form>
     </div>
-    @using (Html.BeginForm())
-    {
-        <p>
-            Buscar Producto Por Nombre: @Html.TextBox("searchProduct")
-            <input type="submit" value="Aplicar Filtros" class="btn btn-primary" />
-        </p>
-    }
-
-</form>
+</div>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.ActionLink("Nombre", "Index", new { sortOrder = ViewBag.NameSortParm })
+                @Html.ActionLink("Nombre", "Index", new { sortOrder = ViewBag.ProductNameSort, searchProductByName = ViewBag.SearchProductByName, categoriaId = ViewBag.SelectedCategory != null ? ViewBag.SelectedCategory.categoriaId : null })
             </th>
             <th>
-                @Html.ActionLink("Precio", "Index", new { sortOrder = ViewBag.PriceSortParm })
+                @Html.ActionLink("Precio", "Index", new { sortOrder = ViewBag.ProductPriceSort, searchProductByName = ViewBag.SearchProductByName, categoriaId = ViewBag.SelectedCategory != null ? ViewBag.SelectedCategory.categoriaId : null })
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.cantidad)

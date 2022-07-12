@@ -17,43 +17,55 @@ namespace ComercioElectronicoMvc.Models
             _context = context;
         }
 
-        public async Task<IActionResult> Index(int? categoriaId, string sortOrder, string searchProduct)
+        public async Task<IActionResult> Index(int? categoriaId, string sortOrder, string searchProductByName)
         {
-            //Validaciones de error que se le pasan a la vista
-            if (TempData["ErrorValidation"] != null) this.ViewData["ErrorMessage"] = TempData["ErrorValidation"];
-
-            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewBag.PriceSortParm = sortOrder == "Precio" ? "price_desc" : "Precio";
-
-            var mercadoContext = _context.Producto.Include(p => p.categoria).AsQueryable();
+            IQueryable<Producto> productsList = _context.Producto.Include(product => product.categoria).AsQueryable();
 
             //Filtro Categoria
-            if (categoriaId != null) mercadoContext = mercadoContext.Where(p => p.categoriaId == categoriaId);
+            if (categoriaId != null)
+            {
+                productsList = productsList.Where(p => p.categoriaId == categoriaId);
+                ViewBag.SelectedCategory = _context.Categoria.Where(category => category.categoriaId == categoriaId).FirstOrDefault();
+
+                //Como en SelectedCategory ya la tengo seleccionada la categoria la saco de la lista para que no se duplique en el filtro.
+                ViewBag.Categories = _context.Categoria.Where(category => !category.deprecado && category.categoriaId != categoriaId).ToList();
+            }
+            else
+            {
+                //Cargo todas las categorias ya que ninguna está selecionada en el filtro
+                ViewBag.Categories = _context.Categoria.Where(category => !category.deprecado).ToList();
+            }
 
             //Filtro Buscar Producto por Nombre
-            if (!String.IsNullOrEmpty(searchProduct)) mercadoContext = mercadoContext.Where(p => p.nombre.ToUpper().Contains(searchProduct.ToUpper()));
+            if (!String.IsNullOrEmpty(searchProductByName))
+            {
+                productsList = productsList.Where(p => p.nombre.ToUpper().Contains(searchProductByName.ToUpper()));
+                ViewBag.SearchProductByName = searchProductByName;
+            }
+
+            if (String.IsNullOrEmpty(sortOrder)) sortOrder = "name_asc";
+
+            ViewBag.ProductNameSort = sortOrder == "name_asc" ? "name_desc" : "name_asc";
+            ViewBag.ProductPriceSort = sortOrder == "price_asc" ? "price_desc" : "price_asc";
 
             //Ordeno ascendente y descendente el nombre de los productos y el precio
             switch (sortOrder)
             {
-                case "name_desc":
-                    mercadoContext = mercadoContext.OrderByDescending(p => p.nombre);
+                case "name_asc":
+                    productsList = productsList.OrderBy(p => p.nombre);
                     break;
-                case "Precio":
-                    mercadoContext = mercadoContext.OrderBy(p => p.precio);
+                case "name_desc":
+                    productsList = productsList.OrderByDescending(p => p.nombre);
+                    break;
+                case "price_asc":
+                    productsList = productsList.OrderBy(p => p.precio);
                     break;
                 case "price_desc":
-                    mercadoContext = mercadoContext.OrderByDescending(p => p.precio);
-                    break;
-                default:
-                    mercadoContext = mercadoContext.OrderBy(p => p.nombre);
+                    productsList = productsList.OrderByDescending(p => p.precio);
                     break;
             }
 
-            //Cargo el Filtro de categorias que no estan deprecadas
-            ViewData["categorias"] = _context.Categoria.Where(c => !c.deprecado).ToList();
-
-            return View(await mercadoContext.ToListAsync());
+            return View(await productsList.ToListAsync());
         }
 
         public IActionResult Details(int? id)
@@ -182,7 +194,8 @@ namespace ComercioElectronicoMvc.Models
             else return product;
         }
 
-        private SelectList LoadCategoryFilter(int? categoryId) {
+        private SelectList LoadCategoryFilter(int? categoryId)
+        {
             //Filtro todas las categorias no eliminadas
             if (categoryId == null) return new SelectList(_context.Categoria.Where(c => !c.deprecado), "categoriaId", "nombre");
             //Ademas selecciono la actual
